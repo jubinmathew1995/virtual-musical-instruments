@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<meta name='viewport' content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0'>
+<!-- three.js library -->
+<script src='three.js'></script>
+<script src='stats.min.js'></script>
+<!-- ar.js -->
+<script src="ar.js"></script>
+<script src="FBXLoader.js"></script>
+
+<!-- Bind window error for error handling -->
+<script>
+	window.addEventListener('error', function(event) {
+		alert("ERROR: " + event.message + " at " + event.filename + " : " + event.lineno + " : " + event.colno);
+	});
+</script>
+
+<body style='margin : 0px; overflow: hidden; font-family: Monospace;'><script>
+	//////////////////////////////////////////////////////////////////////////////////
+	//		Init
+	//////////////////////////////////////////////////////////////////////////////////
+
+	// init renderer
+	var renderer	= new THREE.WebGLRenderer({
+		// antialias	: true,
+		alpha: true
+	});
+	renderer.setClearColor(new THREE.Color('lightgrey'), 0)
+	// renderer.setPixelRatio( 2 );
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.domElement.style.position = 'absolute'
+	renderer.domElement.style.top = '0px'
+	renderer.domElement.style.left = '0px'
+	document.body.appendChild( renderer.domElement );
+
+	// array of functions for the rendering loop
+	var onRenderFcts= [];
+
+	// init scene and camera
+	var scene	= new THREE.Scene();
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//	Load FBX Model - FIX ME 
+	//////////////////////////////////////////////////////////////////////////////////
+	{{!-- var loader = new THREE.FBXLoader();
+	loader.load('/models/Spaceship-model.fbx', function(object) {
+		object.mixer = new THREE.AnimationMixer( object );
+		mixers.push( object.mixer );
+
+		var action = object.mixer.clipAction( object.animations[ 0 ] );
+		action.play();
+
+		object.traverse( function ( child ) {
+
+			if ( child.isMesh ) {
+
+				child.castShadow = true;
+				child.receiveShadow = true;
+
+			}
+
+		});
+		scene.add( object );
+	}); --}}
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		Initialize a basic camera
+	//////////////////////////////////////////////////////////////////////////////////
+
+	// Create a camera
+	var camera = new THREE.Camera();
+	scene.add(camera);
+
+	////////////////////////////////////////////////////////////////////////////////
+	//          handle arToolkitSource
+	////////////////////////////////////////////////////////////////////////////////
+
+	var artoolkitProfile = new THREEx.ArToolkitProfile()
+	artoolkitProfile.sourceWebcam()
+
+	var arToolkitSource = new THREEx.ArToolkitSource(artoolkitProfile.sourceParameters)
+
+	arToolkitSource.init(function onReady(){
+		onResize()
+	})
+	
+	// handle resize
+	window.addEventListener('resize', function(){
+		onResize()
+	})
+	function onResize(){
+		arToolkitSource.onResize()	
+		arToolkitSource.copySizeTo(renderer.domElement)	
+		if( arToolkitContext.arController !== null ){
+			arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)	
+		}	
+	}
+
+	////////////////////////////////////////////////////////////////////////////////
+	//          initialize arToolkitContext
+	////////////////////////////////////////////////////////////////////////////////	
+
+	// create atToolkitContext
+	var arToolkitContext = new THREEx.ArToolkitContext(artoolkitProfile.contextParameters)
+	// initialize it
+	arToolkitContext.init(function onCompleted(){
+		// copy projection matrix to camera
+		camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
+	})
+
+	// update artoolkit on every frame
+	onRenderFcts.push(function(){
+		if( arToolkitSource.ready === false )	return
+
+		arToolkitContext.update( arToolkitSource.domElement )
+	})
+	
+	
+	////////////////////////////////////////////////////////////////////////////////
+	//          Create a ArMarkerControls
+	////////////////////////////////////////////////////////////////////////////////
+	
+	var markerGroup = new THREE.Group
+	scene.add(markerGroup)
+	var markerControls = new THREEx.ArMarkerControls(arToolkitContext, markerGroup, {
+		type : 'pattern',
+		patternUrl : 'patt.hiro',
+	})
+
+
+	// // build a smoothedControls
+	// var smoothedGroup = new THREE.Group()
+	// scene.add(smoothedGroup)
+	// var smoothedControls = new THREEx.ArSmoothedControls(smoothedGroup)
+	// onRenderFcts.push(function(delta){
+	// 	smoothedControls.update(markerGroup)
+	// })
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		add an object in the scene
+	//////////////////////////////////////////////////////////////////////////////////
+
+
+	var markerScene = new THREE.Scene()
+	markerGroup.add(markerScene)
+
+	var mesh = new THREE.AxisHelper()
+	markerScene.add(mesh)
+	
+
+	// var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.125 );
+	// directionalLight.position.x = Math.random() - 0.5;
+	// directionalLight.position.y = Math.random() - 0.5;
+	// directionalLight.position.z = Math.random() - 0.5;
+	// directionalLight.position.normalize();
+	// scene.add( directionalLight );
+	pointLight = new THREE.PointLight( 0xffffff, 1 );
+	scene.add( pointLight );
+	// add a torus knot	
+	// (x,z,y)
+
+	function my_draw(keyBreadth, keyHeight, keyLength, xoffset, yoffset, zoffset, myColor) {	
+		yoffset = yoffset || 0;
+		zoffset = zoffset || 0;
+		myColor = myColor || 0xdddddd;
+		var key	= new THREE.CubeGeometry(keyBreadth, keyHeight, keyLength);
+		var property = { color: myColor, specular: 0x009900, transparent: true, opacity:0.9, flatShading: true }
+		var material	= new THREE.MeshLambertMaterial(property);
+		var mesh	= new THREE.Mesh(key, material);
+		mesh.geometry.mergeVertices();
+		mesh.position.y	= key.parameters.height/2 + yoffset
+		mesh.position.x = key.parameters.width/2 - keyBreadth/2 + xoffset
+		mesh.position.z = keyHeight/2 + zoffset + 1
+		return mesh
+
+	}
+	/********************************
+	*	WHITE KEYS
+	********************************/
+	// Key F
+	keyF = my_draw(0.23, 0.125, 1, 0)
+	markerScene.add(keyF)
+	// Key E
+	keyE = my_draw(0.23, 0.125, 1, -0.25)
+	markerScene.add(keyE)
+	// Key D
+	keyD = my_draw(0.23, 0.125, 1, -0.5)
+	markerScene.add(keyD)
+	// Key C
+	keyC = my_draw(0.23, 0.125, 1, -0.75)
+	markerScene.add(keyC)
+	// Key G
+	keyG = my_draw(0.23, 0.125, 1, 0.25)
+	markerScene.add(keyG)
+	// Key A
+	keyA = my_draw(0.23, 0.125, 1, 0.5)
+	markerScene.add(keyA)
+	// Key B
+	keyB = my_draw(0.23, 0.125, 1, 0.75)
+	markerScene.add(keyB)
+
+	/********************************
+	*	BLACK KEYS
+	********************************/
+	// Key F#, G'
+	keyFSharp = my_draw(0.16, 0.1, 0.6, -0.1, 0.07, -0.2, 0x1e1e1e)
+	markerScene.add(keyFSharp)
+	// Key G#, A'
+	keyGSharp = my_draw(0.16, 0.1, 0.6, -0.35, 0.07, -0.2, 0x1e1e1e)
+	markerScene.add(keyGSharp)
+	// Key A#, B'
+	keyASharp = my_draw(0.16, 0.1, 0.6, -0.65, 0.07, -0.2, 0x1e1e1e)
+	markerScene.add(keyASharp)
+	// Key D#, E'
+	keyDSharp = my_draw(0.16, 0.1, 0.6, 0.35, 0.07, -0.2, 0x1e1e1e)
+	markerScene.add(keyDSharp)
+	// Key C#, D'
+	keyCSharp = my_draw(0.16, 0.1, 0.6, 0.65, 0.07, -0.2, 0x1e1e1e)
+	markerScene.add(keyCSharp)
+
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		render the whole thing on the page
+	//////////////////////////////////////////////////////////////////////////////////
+	var stats = new Stats();
+	document.body.appendChild( stats.dom );
+	// render the scene
+	onRenderFcts.push(function(){
+		renderer.render( scene, camera );
+		stats.update();
+	})
+
+	// run the rendering loop
+	var lastTimeMsec= null
+	requestAnimationFrame(function animate(nowMsec){
+		// keep looping
+		requestAnimationFrame( animate );
+		// measure time
+		lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
+		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
+		lastTimeMsec	= nowMsec
+		// call each update function
+		onRenderFcts.forEach(function(onRenderFct){
+			onRenderFct(deltaMsec/1000, nowMsec/1000)
+		})
+	})
+</script></body>
