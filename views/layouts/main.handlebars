@@ -5,8 +5,7 @@
 <script src='stats.min.js'></script>
 <!-- ar.js -->
 <script src="ar.js"></script>
-<script src="FBXLoader.js"></script>
-
+{{!-- <script src="FBXLoader.js"></script> --}}
 <!-- Bind window error for error handling -->
 <script>
 	window.addEventListener('error', function(event) {
@@ -24,7 +23,7 @@
 		// antialias	: true,
 		alpha: true
 	});
-	renderer.setClearColor(new THREE.Color('lightgrey'), 0)
+	renderer.setClearColor(new THREE.Color('lightgrey'), 0);
 	// renderer.setPixelRatio( 2 );
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	renderer.domElement.style.position = 'absolute'
@@ -146,32 +145,21 @@
 	var mesh = new THREE.AxisHelper()
 	markerScene.add(mesh)
 	
-
-	// var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.125 );
-	// directionalLight.position.x = Math.random() - 0.5;
-	// directionalLight.position.y = Math.random() - 0.5;
-	// directionalLight.position.z = Math.random() - 0.5;
-	// directionalLight.position.normalize();
-	// scene.add( directionalLight );
 	pointLight = new THREE.PointLight( 0xffffff, 1 );
 	scene.add( pointLight );
-	// add a torus knot	
-	// (x,z,y)
 
 	function my_draw(keyBreadth, keyHeight, keyLength, xoffset, yoffset, zoffset, myColor) {	
 		yoffset = yoffset || 0;
 		zoffset = zoffset || 0;
 		myColor = myColor || 0xdddddd;
 		var key	= new THREE.CubeGeometry(keyBreadth, keyHeight, keyLength);
-		var property = { color: myColor, specular: 0x009900, transparent: true, opacity:0.9, flatShading: true }
+		var property = { color: myColor}
 		var material	= new THREE.MeshLambertMaterial(property);
 		var mesh	= new THREE.Mesh(key, material);
-		mesh.geometry.mergeVertices();
 		mesh.position.y	= key.parameters.height/2 + yoffset
 		mesh.position.x = key.parameters.width/2 - keyBreadth/2 + xoffset
 		mesh.position.z = keyHeight/2 + zoffset + 1
 		return mesh
-
 	}
 	/********************************
 	*	WHITE KEYS
@@ -217,7 +205,33 @@
 	keyCSharp = my_draw(0.16, 0.1, 0.6, 0.65, 0.07, -0.2, 0x1e1e1e)
 	markerScene.add(keyCSharp)
 
+	var keyMap = {
+		1:keyC,
+		2:keyCSharp,
+		3:keyD,
+		4:keyDSharp,
+		5:keyE,
+		6:keyF,
+		7:keyFSharp,
+		8:keyG,
+		9:keyGSharp,
+		10:keyA,
+		11:keyASharp,
+		12:keyB
+	}
 
+	function sleep(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
+	var count = 0
+	function update(key, flag){
+		key.material.color.setHex( '0x'+Math.floor(Math.random()*16777215).toString(16) );
+		{{!-- await sleep(2000); --}}
+		if(count)
+		key.material.color.setHex( 0xffffff );
+		count++;
+	}
 	//////////////////////////////////////////////////////////////////////////////////
 	//		render the whole thing on the page
 	//////////////////////////////////////////////////////////////////////////////////
@@ -227,6 +241,7 @@
 	onRenderFcts.push(function(){
 		renderer.render( scene, camera );
 		stats.update();
+		{{!-- update(keyMap[12]); --}}
 	})
 
 	// run the rendering loop
