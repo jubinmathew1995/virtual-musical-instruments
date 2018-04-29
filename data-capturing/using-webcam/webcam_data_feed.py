@@ -36,7 +36,7 @@ if not os.path.exists(FILEPATH):
 print(FILEPATH)
 
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 t = time.time()
 frame_cnt = 0

@@ -4,6 +4,9 @@ import cv2
 import frame_convert2
 import time
 from os.path import expanduser
+import argparse
+import os
+import datetime
 
 SIZE_BOUNDING_SQUARE = 400 # default cut window size
 CLASSNAME = "1"
@@ -22,7 +25,7 @@ if args.classname:
 if args.filepath:
     FILEPATH = args.filepath
 if args.boxsize:
-    SIZE_BOUNDING_SQUARE = args.boxsize
+    SIZE_BOUNDING_SQUARE = int(args.boxsize)
 
 FILEPATH += "/raw_data"
 if not os.path.exists(FILEPATH):
@@ -59,7 +62,7 @@ while 1:
     # time.sleep(0.1)
 
     # converting the image to grayscale 
-    x = cv2.cvtColor(x, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(x, cv2.COLOR_BGR2GRAY)
 
     # for logging the stats
     frame_cnt += 1
