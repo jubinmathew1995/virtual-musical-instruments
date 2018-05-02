@@ -5,7 +5,7 @@
 <script src='stats.min.js'></script>
 <!-- ar.js -->
 <script src="ar.js"></script>
-{{!-- <script src="FBXLoader.js"></script> --}}
+<script src="socket.io.js"></script>
 <!-- Bind window error for error handling -->
 <script>
 	window.addEventListener('error', function(event) {
@@ -14,13 +14,15 @@
 </script>
 
 <body style='margin : 0px; overflow: hidden; font-family: Monospace;'><script>
+	var socket = io();
+
 	//////////////////////////////////////////////////////////////////////////////////
 	//		Init
 	//////////////////////////////////////////////////////////////////////////////////
 
 	// init renderer
 	var renderer	= new THREE.WebGLRenderer({
-		// antialias	: true,
+		antialias	: true,
 		alpha: true
 	});
 	renderer.setClearColor(new THREE.Color('lightgrey'), 0);
@@ -206,42 +208,56 @@
 	markerScene.add(keyCSharp)
 
 	var keyMap = {
-		1:keyC,
-		2:keyCSharp,
-		3:keyD,
-		4:keyDSharp,
-		5:keyE,
-		6:keyF,
-		7:keyFSharp,
-		8:keyG,
-		9:keyGSharp,
-		10:keyA,
-		11:keyASharp,
-		12:keyB
-	}
-
-	function sleep(ms) {
-		return new Promise(resolve => setTimeout(resolve, ms));
+		1:{"keyVal":keyC, "type":"normal"},
+		2:{"keyVal":keyCSharp, "type":"small"},
+		3:{"keyVal":keyD, "type":"normal"},
+		4:{"keyVal":keyDSharp, "type":"small"},
+		5:{"keyVal":keyE, "type":"normal"},
+		6:{"keyVal":keyF, "type":"normal"},
+		7:{"keyVal":keyFSharp, "type":"small"},
+		8:{"keyVal":keyG, "type":"normal"},
+		9:{"keyVal":keyGSharp, "type":"small"},
+		10:{"keyVal":keyA, "type":"normal"},
+		11:{"keyVal":keyASharp, "type":"small"},
+		12:{"keyVal":keyB, "type":"normal"}
 	}
 
 	var count = 0
-	function update(key, flag){
-		key.material.color.setHex( '0x'+Math.floor(Math.random()*16777215).toString(16) );
-		{{!-- await sleep(2000); --}}
-		if(count)
-		key.material.color.setHex( 0xffffff );
+	function update(bin){
+		if(count%30 == 0){		
+			for (var i = 0; i < bin.length; i++) {
+				if(bin[i] == 1){
+					keyMap[i+1]["keyVal"].material.color.setHex( 0x00ff4c );
+				}else{
+					if(keyMap[i+1]["type"] == "normal")
+						keyMap[i+1]["keyVal"].material.color.setHex( 0xffffff );
+					else
+						keyMap[i+1]["keyVal"].material.color.setHex( 0x1e1e1e );
+				}
+			}
+		}
 		count++;
+		console.log(count);
 	}
 	//////////////////////////////////////////////////////////////////////////////////
 	//		render the whole thing on the page
 	//////////////////////////////////////////////////////////////////////////////////
 	var stats = new Stats();
 	document.body.appendChild( stats.dom );
+
+	function getRandomInt(min, max) {
+	    return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+
 	// render the scene
 	onRenderFcts.push(function(){
+		// update_key();
+		socket.on('data', function(data) {
+			update(data);
+			console.log(data);
+		});
 		renderer.render( scene, camera );
 		stats.update();
-		{{!-- update(keyMap[12]); --}}
 	})
 
 	// run the rendering loop
