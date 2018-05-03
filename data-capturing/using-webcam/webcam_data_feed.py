@@ -23,7 +23,7 @@ if args.classname:
 if args.filepath:
     FILEPATH = args.filepath
 if args.boxsize:
-    SIZE_BOUNDING_SQUARE = args.boxsize
+    SIZE_BOUNDING_SQUARE = int(args.boxsize)
 
 FILEPATH += "/raw_data"
 if not os.path.exists(FILEPATH):
@@ -73,12 +73,12 @@ while(True):
     smallImg = gray[top_left[1]:bottom_right[1], top_left[0]:bottom_right[0]]
     cv2.rectangle(gray,top_left,bottom_right,(255,0,0),3)
     
-    if SHOULD_SAVE:
-        tm = str(datetime.datetime.fromtimestamp(time.time()))
-        tm = tm.replace(" ", '-')
-        img_name = FILEPATH + CLASSNAME + "-" + tm
+    # if SHOULD_SAVE:
+    #     tm = str(datetime.datetime.fromtimestamp(time.time()))
+    #     tm = tm.replace(" ", '-')
+    #     img_name = FILEPATH + CLASSNAME + "-" + tm
 
-        cv2.imwrite(img_name + ".png", smallImg)
+    #     cv2.imwrite(img_name + ".png", smallImg)
 
     # Display the resulting frame
     cv2.imshow('cropped image', smallImg)
@@ -87,7 +87,11 @@ while(True):
     if k == 27:
         break
     elif k == 32:
-        SHOULD_SAVE = not SHOULD_SAVE
+        tm = str(datetime.datetime.fromtimestamp(time.time()))
+        tm = tm.replace(" ", '-')
+        img_name = FILEPATH + CLASSNAME + "-" + tm
+
+        cv2.imwrite(img_name + ".png", smallImg)
     	# break
 
 # When everything done, release the capture

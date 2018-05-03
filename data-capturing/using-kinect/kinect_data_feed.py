@@ -54,7 +54,7 @@ frame_cnt = 0
 
 while 1:
     # cv2.imshow('Depth', get_depth())
-    x = get_video()
+    gray = get_depth()
     cur_time = time.time()
     # y = get_depth()
 
@@ -62,7 +62,7 @@ while 1:
     # time.sleep(0.1)
 
     # converting the image to grayscale 
-    gray = cv2.cvtColor(x, cv2.COLOR_BGR2GRAY)
+#    gray = cv2.cvtColor(x, cv2.COLOR_BGR2GRAY)
 
     # for logging the stats
     frame_cnt += 1
