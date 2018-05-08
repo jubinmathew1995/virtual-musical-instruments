@@ -6,6 +6,9 @@ from keras.models import model_from_json
 
 SIZE_BOUNDING_SQUARE = 300
 FILEPATH ="/home/jubin/Videos/new_data_from_real_time/"
+MODEL_JSON = "/home/jubin/Desktop/fyp/models/3keys/model.json"
+MODEL_WEIGHTS = "/home/jubin/Desktop/fyp/models/3keys/model.h5"
+VIDEO_FEED = 0
 CLASSNAME = 0
 
 
@@ -18,11 +21,11 @@ t = time.time()
 ##########
 ### OR ###
 ##########
-with open("/home/jubin/Videos/model.json", "r") as f:
+with open(MODEL_JSON, "r") as f:
     json_string = f.read()
 ##########
 loaded_model = keras.models.model_from_json(json_string) 
-loaded_model.load_weights("/home/jubin/Videos/model.h5")
+loaded_model.load_weights(MODEL_WEIGHTS)
 loaded_model.compile(loss=keras.losses.categorical_crossentropy,
               optimizer=keras.optimizers.Adadelta(),
               metrics=['accuracy'])
@@ -30,7 +33,7 @@ print("\n"+'*'*40,"\nTRAINED MODEL LOADED IN", time.time() - t, "sec.\n"+'*'*40,
 
 START_PREDICTING_FLAG = False
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(VIDEO_FEED)
 
 # for logging the frame rate.
 # t = time.time()
@@ -95,6 +98,12 @@ while True:
     elif k==51:
         # classname = 3
         CLASSNAME = str(3)
+    elif k==52:
+        # classname = 4
+        CLASSNAME = str(4)
+    elif k==53:
+        # classname = 5
+        CLASSNAME = str(5)
     elif k==83 or k==115:
         # for saving the image
         print("saving to: ", CLASSNAME)
