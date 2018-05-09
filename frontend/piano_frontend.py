@@ -3,8 +3,11 @@ try:
 except ImportError:
     from tkinter import Tk, Frame, BOTH, Label, PhotoImage
 import simpleaudio as sa
-import time as t
+import time
 import random
+from threading import Thread
+
+ANS='00000'
 
 KEYS_TO_NOTES = {
     1: 'C1',
@@ -62,15 +65,16 @@ def key_pressed(key):
         wave_obj.play()
         print(note)
 
-def start(some):
-    ans =str(random.randint(0,1))+str(random.randint(0,1))+str(random.randint(0,1))+str(random.randint(0,1))+str(random.randint(0,1))
-    print(ans)
-    for i in range(len(ans)):
-        if(ans[i]=='1'):
-            key_pressed(i+1)
 
 class Piano(Frame):
-
+    def start(self):
+        global ANS
+        print(ANS)
+        for i in range(len(ANS)):
+            if(ANS[i]=='1'):
+                key_pressed(i+1)
+        self.after(1000,self.start)
+    
     def __init__(self, parent):
 
         Frame.__init__(self, parent, background='SkyBlue3')
@@ -101,7 +105,7 @@ class Piano(Frame):
         y = (sh - h) / 2
         self.parent.geometry('%dx%d+%d+%d' % (w, h, x, y))
         
-        self.parent.bind('1', start)
+        # self.parent.bind('1', start)
         
         self.pack(fill=BOTH, expand=1)
 
@@ -117,7 +121,19 @@ class Piano(Frame):
 def main():
     root = Tk()
     app = Piano(root)
+    app.after(10,app.start)
     app.mainloop()
 
+def update_ans():
+    global ANS
+    for i in range(1000):
+        ANS =str(random.randint(0,1))+str(random.randint(0,1))+str(random.randint(0,1))+str(random.randint(0,1))+str(random.randint(0,1))
+        time.sleep(1)
+
+
+
 if __name__ == '__main__':
+    t=Thread(target=update_ans,args=())
+    t.start()
     main()
+    # update_ans()

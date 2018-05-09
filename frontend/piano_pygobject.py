@@ -113,7 +113,7 @@ class App(threading.Thread):
         x = (sw - w) / 2
         y = (sh - h) / 2
         self.root.geometry('%dx%d+%d+%d' % (w, h, x, y))
-        
+        self.root.bind()
         
         # self.pack(fill=BOTH, expand=1)
 
@@ -128,7 +128,7 @@ class App(threading.Thread):
     def run(self):
         self.root = Tk()
         self.init_user_interface()
-        self.root.after(0, self.start)
+        # self.root.after(0, self.start)
         # self.root.after(10, self.get_value)
         self.root.mainloop()
 
