@@ -4,6 +4,7 @@ except ImportError:
     from tkinter import Tk, Frame, BOTH, Label, PhotoImage
 import simpleaudio as sa
 import time as t
+import random
 
 KEYS_TO_NOTES = {
     1: 'C1',
@@ -62,7 +63,7 @@ def key_pressed(key):
         print(note)
 
 def start(some):
-    ans='10100'
+    ans =str(random.randint(0,1))+str(random.randint(0,1))+str(random.randint(0,1))+str(random.randint(0,1))+str(random.randint(0,1))
     print(ans)
     for i in range(len(ans)):
         if(ans[i]=='1'):
