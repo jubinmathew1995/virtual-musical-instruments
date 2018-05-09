@@ -6,7 +6,7 @@ import os
 from os.path import expanduser
 import datetime
 
-SIZE_BOUNDING_SQUARE = 400 # default cut window size
+SIZE_BOUNDING_SQUARE = 300 # default cut window size
 CLASSNAME = "1"
 FILEPATH = expanduser("~")
 SHOULD_SAVE = False

@@ -1,4 +1,6 @@
 node_modules/
 ml-model/.ipynb_checkpoints/
 ml-model/data/
+model.h5
+model.json
 .pyc
