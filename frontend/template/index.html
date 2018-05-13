@@ -291,10 +291,10 @@
             {
                 var note = -1;
                 if(keyCode == 65) note = 0;
-                if(keyCode == 66) note = 1;
-                if(keyCode == 67) note = 2;
-                if(keyCode == 68) note = 3;
-                if(keyCode == 69) note = 4;
+                if(keyCode == 68) note = 1;
+                if(keyCode == 66) note = 2;
+                if(keyCode == 69) note = 3;
+                if(keyCode == 67) note = 4;
 
                 if( note == -1 ) return -1;
                 // return ("_" + (note + controls.octave*12 - 24));
@@ -349,6 +349,9 @@
 
             document.addEventListener('DOMContentLoaded', function() {
                 var socket = io();
+                socket.on('msg_backend', (data) => {
+                    console.log(data);
+                });
                 socket.emit('loaded_ack', true);
                 socket.on('data', function(data){
                     console.log(data);
