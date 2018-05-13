@@ -1,0 +1,19 @@
+INFO:engineio:Server initialized for eventlet.
+INFO:engineio:e01f87cccb71477caa3463d43ed6c65c: Sending packet OPEN data {'sid': 'e01f87cccb71477caa3463d43ed6c65c', 'upgrades': ['websocket'], 'pingTimeout': 60000, 'pingInterval': 25000}
+INFO:engineio:e01f87cccb71477caa3463d43ed6c65c: Sending packet MESSAGE data 0
+INFO:engineio:e01f87cccb71477caa3463d43ed6c65c: Received request to upgrade to websocket
+INFO:engineio:e01f87cccb71477caa3463d43ed6c65c: Sending packet NOOP data None
+INFO:engineio:e01f87cccb71477caa3463d43ed6c65c: Upgrade to websocket successful
+INFO:engineio:37856d7b505f4bd298bda2494b3ca2e8: Sending packet OPEN data {'sid': '37856d7b505f4bd298bda2494b3ca2e8', 'upgrades': ['websocket'], 'pingTimeout': 60000, 'pingInterval': 25000}
+INFO:engineio:37856d7b505f4bd298bda2494b3ca2e8: Sending packet MESSAGE data 0
+INFO:engineio:37856d7b505f4bd298bda2494b3ca2e8: Received request to upgrade to websocket
+INFO:engineio:37856d7b505f4bd298bda2494b3ca2e8: Received packet MESSAGE data 2["loaded_ack",true]
+INFO:socketio:received event "loaded_ack" from 37856d7b505f4bd298bda2494b3ca2e8 [/]
+INFO:engineio:37856d7b505f4bd298bda2494b3ca2e8: Sending packet NOOP data None
+INFO:engineio:37856d7b505f4bd298bda2494b3ca2e8: Upgrade to websocket successful
+INFO:engineio:37856d7b505f4bd298bda2494b3ca2e8: Received packet PING data None
+INFO:engineio:37856d7b505f4bd298bda2494b3ca2e8: Sending packet PONG data None
+INFO:engineio:37856d7b505f4bd298bda2494b3ca2e8: Received packet PING data None
+INFO:engineio:37856d7b505f4bd298bda2494b3ca2e8: Sending packet PONG data None
+INFO:engineio:37856d7b505f4bd298bda2494b3ca2e8: Received packet PING data None
+INFO:engineio:37856d7b505f4bd298bda2494b3ca2e8: Sending packet PONG data None
