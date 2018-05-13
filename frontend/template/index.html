@@ -290,11 +290,11 @@
             function keyCode_to_note( keyCode)
             {
                 var note = -1;
-                if(keyCode == 65) note = 0;
-                if(keyCode == 68) note = 1;
-                if(keyCode == 66) note = 2;
-                if(keyCode == 69) note = 3;
-                if(keyCode == 67) note = 4;
+                if(keyCode == 0) note = 0;
+                if(keyCode == 1) note = 1;
+                if(keyCode == 2) note = 2;
+                if(keyCode == 3) note = 3;
+                if(keyCode == 4) note = 4;
 
                 if( note == -1 ) return -1;
                 // return ("_" + (note + controls.octave*12 - 24));
@@ -326,7 +326,7 @@
                     for (let index = 0; index < 5; index++) {
                         keyRelease({"keyCode":65+index});
                     }
-                }, 1000);
+                }, 2000);
             }            
 
             function keyRelease(ev)
@@ -360,7 +360,7 @@
                     for (let index = 0; index < data.length; index++) {
                         const element = data[index];
                         if(element === '1'){
-                            keyPress({"keyCode":65+index});
+                            keyPress({"keyCode":index});
                             result_arr.push(index);
                         }
                     }

@@ -12,8 +12,8 @@ socketIO = SocketIO('localhost', 8000)
 
 SIZE_BOUNDING_SQUARE = 300
 FILEPATH ="/home/jubin/Videos/new_data_from_real_time/"
-MODEL_JSON = "/home/jubin/Desktop/fyp/models/5key-new-latest/model.json"
-MODEL_WEIGHTS = "/home/jubin/Desktop/fyp/models/5key-new-latest/model.h5"
+MODEL_JSON = "/home/himanshu/Desktop/jubin/model.json"
+MODEL_WEIGHTS = "/home/himanshu/Desktop/jubin/model.h5"
 VIDEO_FEED = 1
 CLASSNAME = 0
 LINE_WIDTH = 2
@@ -98,7 +98,9 @@ def real_time_log():
             # requests.get('http://localhost:8000/'+str(ANS))
             ANS = ans
             if not PRESSED:
-                socketIO.emit('msg_backend', str(ANS))
+                socketIO.emit('press', str(ANS))
+            else:
+                socketIO.emit('un_press', str(ANS))
             # if not PRESSED:
             #     sio.emit("data", ans)
 
