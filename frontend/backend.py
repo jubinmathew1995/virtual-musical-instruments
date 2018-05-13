@@ -1,7 +1,3 @@
-import socketio
-import eventlet
-from flask import Flask, render_template
-
 import time
 import random
 import numpy as np
@@ -21,32 +17,6 @@ LINE_WIDTH = 2
 ANS='00000'
 PREV_ANS=ANS
 PRESSED = False
-
-sio = socketio.Server()
-app = Flask(__name__, static_folder='static', template_folder='template', static_url_path='')
-
-
-
-@app.route('/')
-def index():
-    """Serve the client-side application."""
-    return render_template('index.html')
-
-@sio.on('connect')
-def connect(sid, environ):
-    print('connect ', sid)
-
-# @sio.on('loaded_ack')
-@app.route('/<data>', methods=['GET'])
-def message(data):
-    print('Loaded: ', data)
-    if data:
-        sio.emit("data", data)
-    return "Data Sent"
-
-@sio.on('disconnect')
-def disconnect(sid):
-    print('disconnect ', sid)
 
 def real_time_log():
     global ANS, PRESSED
@@ -161,11 +131,6 @@ def real_time_log():
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    t=Thread(target=real_time_log,args=())
-    t.start()
-
-    # wrap Flask application with socketio's middleware
-    app = socketio.Middleware(sio, app)
-
-    # deploy as an eventlet WSGI server
-    eventlet.wsgi.server(eventlet.listen(('', 8000)), app)
+    # t=Thread(target=real_time_log,args=())
+    # t.start()
+    real_time_log()
