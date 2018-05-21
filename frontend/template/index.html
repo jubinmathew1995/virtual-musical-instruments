@@ -322,11 +322,9 @@
                         MIDI.noteOn(0, note+21, velocity, delay);                        
                     }
                 }
-                setInterval(function() {
-                    for (let index = 0; index < 5; index++) {
-                        keyRelease({"keyCode":65+index});
-                    }
-                }, 2000);
+                setTimeout(function(){ 
+                    keyRelease(ev);
+                }, 100);            
             }            
 
             function keyRelease(ev)
@@ -343,8 +341,7 @@
                     var velocity = 127;// how hard the note hits
                     MIDI.setVolume(0, 127);
                     MIDI.noteOff(0, note+21, delay + 0.08);
-                }            
-
+                }
             }          
 
             document.addEventListener('DOMContentLoaded', function() {
