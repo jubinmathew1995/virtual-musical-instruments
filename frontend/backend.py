@@ -8,8 +8,8 @@ from keras.models import model_from_json
 import requests
 import sys
 
-# from socketIO_client import SocketIO
-# socketIO = SocketIO('localhost', 8000)
+from socketIO_client import SocketIO
+socketIO = SocketIO('localhost', 8000)
 
 SIZE_BOUNDING_SQUARE = 300
 FILEPATH ="/home/jubin/Videos/new_data_from_real_time/"
@@ -124,9 +124,9 @@ def real_time_log():
             #     PRESSED = False
             # if (PRESSED == True):
             # requests.get('http://localhost:8000/'+str(ANS))
-            # if ANS != ans:
-            #     socketIO.emit('msg_backend', temp)
-            # ANS = ans
+            if ANS != ans:
+                socketIO.emit('msg_backend', temp)
+            ANS = ans
 
             # if not PRESSED:
             #     sio.emit("data", ans)

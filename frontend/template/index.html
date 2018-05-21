@@ -63,8 +63,11 @@
         </style>    
     </head>
     <body>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js"></script>        
+        <script src="/js/socket.io.js"></script>        
         <script type="text/javascript">
+            var PRESSED = false;
+            var key = 0;
+
             
             // Begin MIDI loader widger
             MIDI.loader = new widgets.Loader({
@@ -225,7 +228,7 @@
             function key_status (keyName, status)
             {
                 var obj = scene.getObjectByName(keyName, true);
-                console.log("Here", obj)
+                // console.log("Here", obj)
                 if (obj != undefined)
                 {                 
                     obj.clock.start();
@@ -303,28 +306,25 @@
 
             function keyPress(ev)
             {
-                console.log(ev);
+                // console.log(ev);
                 if (keys_down[ev.keyCode] != true)
                 {
                     var obj = keyCode_to_note(ev.keyCode);
                     var disp_note = obj.disp, note = obj.note;
                     if (note != -1)
                     {
-                        console.log("note", disp_note);
+                        // console.log("note", disp_note);
                         key_status(disp_note, keyState.note_on);
                         keys_down[ev.keyCode] = true;                     
 
                         var delay = 0; // play one note every quarter second
                         // var note = parseInt(note.substr(1))+21; // the MIDI note
                         var velocity = 127; // how hard the note hits
-                        console.log(ev, MIDI);
+                        // console.log(ev, MIDI);
                         MIDI.setVolume(0, 127);   
                         MIDI.noteOn(0, note+21, velocity, delay);                        
                     }
-                }
-                setTimeout(function(){ 
-                    keyRelease(ev);
-                }, 100);            
+                }            
             }            
 
             function keyRelease(ev)
@@ -351,14 +351,22 @@
                 });
                 socket.emit('loaded_ack', true);
                 socket.on('data', function(data){
+                    keyRelease({"keyCode":key});
                     console.log(data);
+                    var temp = data;
                     data = Array.from(data);
                     var result_arr = [];
-                    for (let index = 0; index < data.length; index++) {
-                        const element = data[index];
-                        if(element === '1'){
-                            keyPress({"keyCode":index});
-                            result_arr.push(index);
+                    if(temp == "00000")
+                        PRESSED = false;
+                    else{
+                        for (let index = 0; index < data.length; index++) {
+                            const element = data[index];
+                            if(element === '1'){
+                                PRESSED = true;
+                                key = index;
+                                keyPress({"keyCode":index});
+                                result_arr.push(index);
+                            }
                         }
                     }
                     console.log(result_arr);
