@@ -12,8 +12,8 @@ socketIO = SocketIO('localhost', 8000)
 
 SIZE_BOUNDING_SQUARE = 300
 FILEPATH ="/home/jubin/Videos/new_data_from_real_time/"
-MODEL_JSON = "/home/himanshu/Desktop/jubin/model.json"
-MODEL_WEIGHTS = "/home/himanshu/Desktop/jubin/model.h5"
+MODEL_JSON = "/home/himanshu/Desktop/ml/models/Long_key_layout/v2_50e_reinf1/model.json"
+MODEL_WEIGHTS = "/home/himanshu/Desktop/ml/models/Long_key_layout/v2_50e_reinf1/model.h5"
 VIDEO_FEED = 1
 CLASSNAME = 0
 LINE_WIDTH = 2
@@ -87,20 +87,20 @@ def real_time_log():
             x_test = x_test.astype('float32')
             x_test /= 255
             res = loaded_model.predict(x_test)
-            ans = (res>.7).astype(int)
-            ans=''.join([str(x) for x in ans.reshape(-1)[1:]])
+            ans = (res>.7).astype(int).reshape(-1)
+            temp = str(ans[1]) + str(ans[4]) + str(ans[2]) + str(ans[5]) + str(ans[3])
+            ans=''.join([str(x) for x in ans[1:]])
             print(ans, PRESSED)
-            if ANS == ans:
-                PRESSED = True
-            else:
-                PRESSED = False
+            # if ANS == ans:
+            #     PRESSED = True
+            # else:
+            #     PRESSED = False
             # if (PRESSED == True):
             # requests.get('http://localhost:8000/'+str(ANS))
+            if ANS != ans:
+                socketIO.emit('msg_backend', temp)
             ANS = ans
-            if not PRESSED:
-                socketIO.emit('press', str(ANS))
-            else:
-                socketIO.emit('un_press', str(ANS))
+
             # if not PRESSED:
             #     sio.emit("data", ans)
 
