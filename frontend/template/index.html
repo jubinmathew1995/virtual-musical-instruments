@@ -392,44 +392,14 @@
 
                     // Close the MIDI loader widget and open the GUI                                        
                     MIDI.loader.stop();
-                    // songsToFiles ={
-                    //                 "Game Of Thrones Theme, Ramin Djawadi": "game_of_thrones.mid",
-                    //                 "Mario Overworld Theme (Super Mario Bros 3), Koji Kondo": "mario_-_overworld_theme.mid",                                    
-                    //                 "He's a Pirate (Pirates of the Caribbean), Klaus Badelt" : "hes_a_pirate.mid",
-                    //                 "Hedwigs Theme (Harry Potter), John Williams": "hedwigs_theme.mid",
-                    //                 "Something There (Beauty and the Beast), Alan Menken":"something_there.mid",
-                    //                 "Cruel Angel Thesis (Neon Genesis Evangelion)": "cruel_angel__s_thesis.mid",
-                    //                 "Me cuesta tanto olvidarte (Mecano)": "me_cuesta.mid",
-                    //                 "Sonata No. 14 C# minor (Moonlight), Beethoven": "mond_1.mid",
-                    //                 "For Elise, Beethoven": "for_elise_by_beethoven.mid",                                    
-                    //                 "Asturias (Leyenda), Albeniz": "alb_se5_format0.mid",
-                    //                 "Aragon (Fantasia), Albeniz": "alb_se6.mid",
-                    //                 "Prelude and Fugue in C major BWV 846, Bach": "bach_846.mid",
-                    //                 "Fantasia C major, Schubert": "schub_d760_1.mid",
-                    //                 "Sonata No. 16 C major, Mozart": "mz_545_1.mid",			    
-                    //                 "Sonata No. 11 A major (K331, First Movement), Mozart": "mz_331_1.mid",
-                    //                 "March - Song of the Lark, Tchaikovsky":"ty_maerz.mid",
-                    //                 "Piano Sonata in C major, Hoboken, Haydn": "haydn_35_1.mid",
-                    //                 "Etudes, Opus 25, Chopin": "chpn_op25_e1.mid",
-                    //                 "Polonaise Ab major, Opus 53, Chopin": "chpn_op53.mid",
-                    //                 "No. 2 - Oriental, Granados": "gra_esp_2.mid",
-                    //                 "Bohemian Rhapsody, Queen": "bohemian1.mid",                                    
-                    //               };
+                    
                     var gui = new dat.GUI({ width:625});
-                    //gui.add(controls, 'key_attack_time', 2.0 , 40.0);
-                    //gui.add(controls, 'key_max_rotation',0.2 , 1.0);                             
-                    // var song = gui.add(controls, 'song', songsToFiles);
+
                     var noteOnColorControl = gui.addColor(controls, 'noteOnColor');
                     noteOnColorControl.onChange(function(value)
                                     {
                                         noteOnColor = new THREE.Color().setRGB(controls.noteOnColor[0]/256.0, controls.noteOnColor[1]/256.0, controls.noteOnColor[2]/256.0);;
                                     });
-
-                    // song.onChange(function(value)
-                    //                 {
-                    //                     MIDI.Player.stop();
-                    //                     MIDI.Player.loadFile("midi/" + value, MIDI.Player.start);
-                    //                 });
 
                     // make sure to remove any key pressed when changing the octave
                     var octave = gui.add(controls, 'octave',0 , 4).step(1);
