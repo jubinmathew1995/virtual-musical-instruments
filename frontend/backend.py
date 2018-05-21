@@ -8,14 +8,14 @@ from keras.models import model_from_json
 import requests
 import sys
 
-# from socketIO_client import SocketIO
-# socketIO = SocketIO('localhost', 8000)
+from socketIO_client import SocketIO
+socketIO = SocketIO('localhost', 8000)
 
 SIZE_BOUNDING_SQUARE = 300
 FILEPATH ="/home/jubin/Videos/new_data_from_real_time/"
-MODEL_JSON = "/home/jubin/Desktop/new_layout/v1_12e_mast calta_hai/model.json"
-MODEL_WEIGHTS = "/home/jubin/Desktop/new_layout/v1_12e_mast calta_hai/model.h5"
-VIDEO_FEED = 0
+MODEL_JSON = "/home/himanshu/Desktop/ml/models/Long_key_layout/v3_4e_dataAug1/model.json"
+MODEL_WEIGHTS = "/home/himanshu/Desktop/ml/models/Long_key_layout/v3_4e_dataAug1/model.h5"
+VIDEO_FEED = 1
 CLASSNAME = 0
 LINE_WIDTH = 2
 
@@ -124,9 +124,9 @@ def real_time_log():
             #     PRESSED = False
             # if (PRESSED == True):
             # requests.get('http://localhost:8000/'+str(ANS))
-            # if ANS != ans:
-            #     socketIO.emit('msg_backend', temp)
-            # ANS = ans
+            if ANS != ans:
+                socketIO.emit('msg_backend', temp)
+            ANS = ans
 
             # if not PRESSED:
             #     sio.emit("data", ans)

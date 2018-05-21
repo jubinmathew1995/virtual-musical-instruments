@@ -78,6 +78,7 @@
                 var y = (x-a)/(b-a);
                 return y*y*(3.0-2.0*y);
             }
+
             function mix(a,b,x)
             {
                 return a + (b - a)*Math.min(Math.max(x,0.0),1.0);
@@ -157,7 +158,6 @@
 
             function init_lights()
             {
-                //var spotlight = new THREE.SpotLight(0xffffff);
                 var spotlight = new THREE.DirectionalLight(0xffffff);
                 
                 spotlight.position.set(1.0,2.4,-7.5);
@@ -191,19 +191,16 @@
             function prepare_scene( collada )
             {
                 collada.scene.traverse(initialize_keys);
-                // collada.scene.position.y = 0;                
                 scene.add(collada.scene);                
             }
 
             function initialize_keys( obj)
             {
                 keys_obj.push(obj);                
-                // obj.rotation.x = -Math.PI/4.0;
                 obj.rotation.y = 0;
                 obj.rotation.z = 0;
                 obj.position.x += 0.1;
                 obj.position.y -= 0.165;
-                // console.log(obj.rotation.x)
                 obj.keyState = keyState.unpressed;
                 obj.clock = new THREE.Clock(false);
                 obj.castShadow = true;
@@ -219,7 +216,6 @@
                     obj.material.note_off = obj.material.color.clone();
                    
                 }
-                // console.log(scene.ge);
             }
 
             function key_status (keyName, status)
@@ -274,7 +270,6 @@
                 cameraControls.update(delta);
                 for(i in keys_obj)
                 {
-                    // console.log(keys_obj[i]);
                     update_key(keys_obj[i], delta);
                 }
 
@@ -297,7 +292,6 @@
                 if(keyCode == 4) note = 4;
 
                 if( note == -1 ) return -1;
-                // return ("_" + (note + controls.octave*12 - 24));
                 return {"disp":("_" + (note)), "note":note + controls.octave*12};
             }
 
@@ -368,10 +362,7 @@
             window.onload = function ()
             {
                 MIDI.loadPlugin(function ()
-                {
-                    //MIDI.Player.loadFile(song[0], MIDI.Player.start);
-                    // MIDI.Player.timeWarp = 1.0; // speed the song is played back
-                    // MIDI.Player.loadFile("midi/" + controls.song);                    
+                {            
                     
                     MIDI.Player.addListener(function(data)
                     {
@@ -393,22 +384,20 @@
                     var gui = new dat.GUI({ width:625});
 
                     var noteOnColorControl = gui.addColor(controls, 'noteOnColor');
-                    noteOnColorControl.onChange(function(value)
-                                    {
-                                        noteOnColor = new THREE.Color().setRGB(controls.noteOnColor[0]/256.0, controls.noteOnColor[1]/256.0, controls.noteOnColor[2]/256.0);;
-                                    });
+                    noteOnColorControl.onChange(function(value){
+                        noteOnColor = new THREE.Color().setRGB(controls.noteOnColor[0]/256.0, controls.noteOnColor[1]/256.0, controls.noteOnColor[2]/256.0);;
+                    });
 
                     // make sure to remove any key pressed when changing the octave
                     var octave = gui.add(controls, 'octave',0 , 4).step(1);
-                    octave.onChange(function(value)
-                                    {
-                                        for (keyCode in keys_down)
-                                        {  
-                                            var note = keyCode_to_note(keyCode);
-                                            key_status(note, keyState.note_off);
-                                        }
-                                        
-                                    });
+                    octave.onChange(function(value){
+                        for (keyCode in keys_down)
+                        {  
+                            var note = keyCode_to_note(keyCode);
+                            key_status(note, keyState.note_off);
+                        }
+                        
+                    });
                 });                               
             };            
 
