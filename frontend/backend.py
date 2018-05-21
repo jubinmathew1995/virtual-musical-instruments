@@ -6,21 +6,46 @@ import keras
 from threading import Thread
 from keras.models import model_from_json
 import requests
+import sys
 
-from socketIO_client import SocketIO
-socketIO = SocketIO('localhost', 8000)
+# from socketIO_client import SocketIO
+# socketIO = SocketIO('localhost', 8000)
 
 SIZE_BOUNDING_SQUARE = 300
 FILEPATH ="/home/jubin/Videos/new_data_from_real_time/"
-MODEL_JSON = "/home/himanshu/Desktop/ml/models/Long_key_layout/v2_50e_reinf1/model.json"
-MODEL_WEIGHTS = "/home/himanshu/Desktop/ml/models/Long_key_layout/v2_50e_reinf1/model.h5"
-VIDEO_FEED = 1
+MODEL_JSON = "/home/jubin/Desktop/new_layout/v1_12e_mast calta_hai/model.json"
+MODEL_WEIGHTS = "/home/jubin/Desktop/new_layout/v1_12e_mast calta_hai/model.h5"
+VIDEO_FEED = 0
 CLASSNAME = 0
 LINE_WIDTH = 2
 
 ANS='00000'
 PREV_ANS=ANS
 PRESSED = False
+
+class multithreadedvideo(object):
+    def __init__(self, src=0):
+        self.stream = cv2.VideoCapture(src)
+        (self.grabbed, self.frame) = self.stream.read()
+        self.stopped = False
+
+    def start(self):
+        Thread(target=self.update, args=()).start()
+        return self
+
+    def update(self):
+        while True:
+            if self.stopped:
+                return
+            (self.grabbed, self.frame) = self.stream.read()
+
+    def read(self):
+        return self.frame
+
+    def stop(self):
+        self.stream.release()
+        self.stopped = True
+        sys.exit(0)
 
 def real_time_log():
     global ANS, PRESSED
@@ -44,13 +69,15 @@ def real_time_log():
 
     START_PREDICTING_FLAG = False
 
-    cap = cv2.VideoCapture(VIDEO_FEED)
+    # cap = cv2.VideoCapture(VIDEO_FEED)
+    vs = multithreadedvideo(src=VIDEO_FEED).start()
 
     # for logging the frame rate.
     # t = time.time()
     # frame_cnt = 0
     while True:
-        ret, frame = cap.read()
+        # ret, frame = cap.read()
+        frame = vs.read()
         # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         # increase the sleep time to decrease the frame rate.
@@ -97,9 +124,9 @@ def real_time_log():
             #     PRESSED = False
             # if (PRESSED == True):
             # requests.get('http://localhost:8000/'+str(ANS))
-            if ANS != ans:
-                socketIO.emit('msg_backend', temp)
-            ANS = ans
+            # if ANS != ans:
+            #     socketIO.emit('msg_backend', temp)
+            # ANS = ans
 
             # if not PRESSED:
             #     sio.emit("data", ans)
@@ -137,7 +164,9 @@ def real_time_log():
             name = FILEPATH+CLASSNAME+"/"+str(time.time())+".png"
             cv2.imwrite(name, smallImg)
     # When everything done, release the capture
-    cap.release()
+    # cap.release()
+    vs.stop()
+    sys.exit(0)
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
