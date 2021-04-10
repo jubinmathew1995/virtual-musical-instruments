@@ -6,10 +6,10 @@ This research is part of our Bachelor of Engineering degree's Final Year Capston
 
 ## Team
 
-[Himanshu Kumar](https://github.com/Himanshu4746)
-[Jubin Mathew](https://github.com/jubinmathew1995)
-[K Vishnudev](https://github.com/vishnu-dev)
-[Mahendra Singh](https://github.com/Mahendra114027)
+* [Himanshu Kumar](https://github.com/Himanshu4746)
+* [Jubin Mathew](https://github.com/jubinmathew1995)
+* [K Vishnudev](https://github.com/vishnu-dev)
+* [Mahendra Singh](https://github.com/Mahendra114027)
 
 
 ## Requirements (Python modules)
